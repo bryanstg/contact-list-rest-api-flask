@@ -76,7 +76,15 @@ class Contact(db.Model, Crud):
             "email" : self.email,
             "address" : self.address,
             "phone" : self.phone,
-            "memberships" : [m.group.serialize() for m in self.memberships]
+            "groups" : [m.group.minialize() for m in self.memberships]
+        }
+    
+    def minialize(self):
+        """ Return a resume dictionary of the instance """
+        return {
+            "id": self.id,
+            "full_name": self.full_name,
+            "phone": self.phone,
         }
 
 
@@ -109,12 +117,19 @@ class Group(db.Model, Crud):
         print(group_updated.serialize())
         return group_updated
 
+    def minialize(self):
+        """ Return a resume dictionary of the instance """
+        return {
+            "id": self.id,
+            "name": self.name,
+        }
+
     def serialize(self):
         """ Return a dictionary of the instance """
         return {
             "id" : self.id,
             "name" : self.name,
-            "memberships" : [m.contact.serialize() for m in self.memberships]
+            "contacts" : [m.contact.minialize() for m in self.memberships]
         }
     
     def save(self):
